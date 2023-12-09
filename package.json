@@ -1,10 +1,10 @@
 {
-    'urls': [
-        ['mpyDiskCache/__init__.py', 'github:ShyftXero/mpyDiskCache/mpyDiskCache/__init__.py'
+    "urls": [
+        ["mpyDiskCache/__init__.py", "github:ShyftXero/mpyDiskCache/mpyDiskCache/__init__.py"
         ],
-        ['mpyDiskCache/micropycache.py', 'github:ShyftXero/mpyDiskCache/mpyDiskCache/mpyDiskCache.py'
+        ["mpyDiskCache/micropycache.py", "github:ShyftXero/mpyDiskCache/mpyDiskCache/mpyDiskCache.py"
         ]
     ], 
-    'deps': [], 
-    'version': '1.0'
+    "deps": [], 
+    "version": "1.0"
 }
