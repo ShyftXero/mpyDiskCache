@@ -4,15 +4,14 @@ if platform == 'linux':
 else:
     import ujson as json
 import os
-# import _thread
 
 DEBUG = True
 
 class mpyDiskCache:
-    def __init__(self, directory, max_size=50,debug=DEBUG):
-        self.directory = directory
+    def __init__(self, directory, max_size=50, debug=DEBUG):
+        self.directory = directory.rstrip('/')  # Remove trailing slash
         self.max_size = max_size
-        self.ages_file = os.path.join(self.directory, 'ages.json')
+        self.ages_file = self.directory + '/ages.json'  # Manually construct path
         if not os.path.exists(directory):
             try:
                 os.makedirs(directory)
@@ -20,17 +19,17 @@ class mpyDiskCache:
                 pass
         self.ages = self._load_ages()
         self.DEBUG = debug
-    
-    def debug_print(self,*args,**kwargs):
-        if self.DEBUG == True:
+
+    def debug_print(self, *args, **kwargs):
+        if self.DEBUG:
             print(*args, **kwargs)
-    
+
     def _load_ages(self):
         if os.path.exists(self.ages_file):
             try:
                 with open(self.ages_file, 'r') as f:
                     data = f.read().strip()
-                    if data:  # Check if the file is not empty
+                    if data:
                         return json.loads(data)
                     else:
                         return []
@@ -46,7 +45,7 @@ class mpyDiskCache:
             pass
 
     def _get_file_path(self, key):
-        return os.path.join(self.directory, '{}.json'.format(key))
+        return self.directory + '/' + '{}.json'.format(key)  # Manually construct path
 
     def _clean_up(self):
         while len(self.ages) > self.max_size:
@@ -69,7 +68,7 @@ class mpyDiskCache:
     def get(self, key):
         try:
             file_path = self._get_file_path(key)
-            self.debug_print(f'Setting {key} from {file_path}')
+            self.debug_print(f'Getting {key} from {file_path}')
             if os.path.exists(file_path):
                 with open(file_path, 'r') as f:
                     return json.load(f)
@@ -92,4 +91,4 @@ class mpyDiskCache:
 # Usage Example
 # cache = mpyDiskCache('path_to_cache_directory')
 # cache.set('key1', 'value1')
-# debug_print(cache.get('key1'))
+# print(cache.get('key1'))
