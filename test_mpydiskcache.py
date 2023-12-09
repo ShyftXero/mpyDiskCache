@@ -1,6 +1,6 @@
 def test_micro_py_cache():
     import os
-    from mpyDiskCache.mpyDiskCache import mpyDiskCache
+    from mpyDiskCache import mpyDiskCache
 
     # Setup test environment
     test_dir = 'test_cache_dir'
