@@ -9,8 +9,12 @@
 - Stores data in JSON format.
 - Configurable cache size with automatic oldest-item eviction.
 - Debug mode for easy troubleshooting.
+- Pure python so it should work linux and windows too.
 
 ## Installation
+`mpremote mip install github:ShyftXero/mpyDiskCache`
+
+OR
 
 Copy the `mpyDiskCache.py` file into your MicroPython project directory.
 
