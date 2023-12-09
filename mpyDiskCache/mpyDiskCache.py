@@ -9,16 +9,27 @@ DEBUG = True
 
 class mpyDiskCache:
     def __init__(self, directory, max_size=50, debug=DEBUG):
-        self.directory = directory.rstrip('/')  # Ensure no trailing slash
+        self.directory = directory.rstrip('/')  # Remove trailing slash
         self.max_size = max_size
-        self.ages_file = f'{self.directory}/ages.json'  # Manually construct path
-        if not os.listdir(directory):  # Check if directory is empty
-            try:
-                os.mkdir(directory)
-            except OSError:
-                pass
-        self.ages = self._load_ages()
+        self.ages_file = f'{self.directory}/ages.json'
         self.DEBUG = debug
+
+        # Create the directory if it doesn't exist
+        try:
+            if not self._dir_exists(self.directory):
+                os.mkdir(self.directory)
+        except OSError as e:
+            self.debug_print(f"Error creating directory: {e}")
+            raise
+
+        self.ages = self._load_ages()
+
+    def _dir_exists(self, path):
+        # Check if a directory exists
+        try:
+            return os.listdir(path) is not None
+        except OSError:
+            return False
 
     def debug_print(self, *args, **kwargs):
         if self.DEBUG:
@@ -94,7 +105,10 @@ class mpyDiskCache:
         except OSError:
             pass
 
+"""
 # Usage Example
-# cache = mpyDiskCache('path_to_cache_directory')
-# cache.set('key1', 'value1')
-# print(cache.get('key1'))
+from mpyDiskCache import mpyDiskCache
+cache = mpyDiskCache('path_to_cache_directory')
+cache.set('key1', 'value1')
+print(cache.get('key1'))
+"""
