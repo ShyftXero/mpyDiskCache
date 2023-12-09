@@ -2,7 +2,7 @@
     "urls": [
         ["mpyDiskCache/__init__.py", "github:ShyftXero/mpyDiskCache/mpyDiskCache/__init__.py"
         ],
-        ["mpyDiskCache/micropycache.py", "github:ShyftXero/mpyDiskCache/mpyDiskCache/mpyDiskCache.py"
+        ["mpyDiskCache/mpyDiskCache.py", "github:ShyftXero/mpyDiskCache/mpyDiskCache/mpyDiskCache.py"
         ]
     ], 
     "deps": [], 
