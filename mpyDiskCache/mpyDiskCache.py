@@ -9,12 +9,12 @@ DEBUG = True
 
 class mpyDiskCache:
     def __init__(self, directory, max_size=50, debug=DEBUG):
-        self.directory = directory.rstrip('/')  # Remove trailing slash
+        self.directory = directory.rstrip('/')  # Ensure no trailing slash
         self.max_size = max_size
-        self.ages_file = self.directory + '/ages.json'  # Manually construct path
-        if not os.path.exists(directory):
+        self.ages_file = f'{self.directory}/ages.json'  # Manually construct path
+        if not os.listdir(directory):  # Check if directory is empty
             try:
-                os.makedirs(directory)
+                os.mkdir(directory)
             except OSError:
                 pass
         self.ages = self._load_ages()
@@ -25,17 +25,15 @@ class mpyDiskCache:
             print(*args, **kwargs)
 
     def _load_ages(self):
-        if os.path.exists(self.ages_file):
-            try:
+        try:
+            if self._file_exists(self.ages_file):
                 with open(self.ages_file, 'r') as f:
                     data = f.read().strip()
                     if data:
                         return json.loads(data)
-                    else:
-                        return []
-            except OSError:
-                pass
-        return []
+            return []
+        except OSError:
+            return []
 
     def _save_ages(self):
         try:
@@ -45,13 +43,21 @@ class mpyDiskCache:
             pass
 
     def _get_file_path(self, key):
-        return self.directory + '/' + '{}.json'.format(key)  # Manually construct path
+        return f'{self.directory}/{key}.json'  # Manually construct path
 
     def _clean_up(self):
         while len(self.ages) > self.max_size:
             oldest_key = self.ages.pop(0)
             os.remove(self._get_file_path(oldest_key))
         self._save_ages()
+
+    def _file_exists(self, filepath):
+        # Check if a file exists in a directory
+        try:
+            with open(filepath, 'r'):
+                return True
+        except OSError:
+            return False
 
     def set(self, key, value):
         try:
@@ -69,7 +75,7 @@ class mpyDiskCache:
         try:
             file_path = self._get_file_path(key)
             self.debug_print(f'Getting {key} from {file_path}')
-            if os.path.exists(file_path):
+            if self._file_exists(file_path):
                 with open(file_path, 'r') as f:
                     return json.load(f)
         except OSError:
@@ -80,7 +86,7 @@ class mpyDiskCache:
         try:
             file_path = self._get_file_path(key)
             self.debug_print(f'Deleting {key} from {file_path}')
-            if os.path.exists(file_path):
+            if self._file_exists(file_path):
                 os.remove(file_path)
             if key in self.ages:
                 self.ages.remove(key)
