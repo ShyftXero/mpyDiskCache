@@ -5,7 +5,7 @@ else:
     import ujson as json
 import os
 
-DEBUG = True
+DEBUG = False
 
 class mpyDiskCache:
     def __init__(self, directory, max_size=50, debug=DEBUG):
@@ -19,7 +19,7 @@ class mpyDiskCache:
             if not self._dir_exists(self.directory):
                 os.mkdir(self.directory)
         except OSError as e:
-            self.debug_print(f"Error creating directory: {e}")
+            print(f"Error creating directory: {e}")
             raise
 
         self.ages = self._load_ages()
@@ -73,7 +73,7 @@ class mpyDiskCache:
     def set(self, key, value):
         try:
             file_path = self._get_file_path(key)
-            self.debug_print(f'Setting {key}:{value} in {file_path}')
+            # self.debug_print(f'Setting {key}:{value} in {file_path}')
             with open(file_path, 'w') as f:
                 json.dump(value, f)
             if key not in self.ages:
@@ -85,7 +85,7 @@ class mpyDiskCache:
     def get(self, key):
         try:
             file_path = self._get_file_path(key)
-            self.debug_print(f'Getting {key} from {file_path}')
+            # self.debug_print(f'Getting {key} from {file_path}')
             if self._file_exists(file_path):
                 with open(file_path, 'r') as f:
                     return json.load(f)
@@ -96,7 +96,7 @@ class mpyDiskCache:
     def delete(self, key):
         try:
             file_path = self._get_file_path(key)
-            self.debug_print(f'Deleting {key} from {file_path}')
+            # self.debug_print(f'Deleting {key} from {file_path}')
             if self._file_exists(file_path):
                 os.remove(file_path)
             if key in self.ages:
@@ -104,11 +104,3 @@ class mpyDiskCache:
             self._save_ages()
         except OSError:
             pass
-
-"""
-# Usage Example
-from mpyDiskCache import mpyDiskCache
-cache = mpyDiskCache('path_to_cache_directory')
-cache.set('key1', 'value1')
-print(cache.get('key1'))
-"""
