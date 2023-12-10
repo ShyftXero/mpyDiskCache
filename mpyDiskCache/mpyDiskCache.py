@@ -89,8 +89,8 @@ class mpyDiskCache:
             if self._file_exists(file_path):
                 with open(file_path, 'r') as f:
                     return json.load(f)
-        except OSError:
-            pass
+        except BaseException as e:
+            print(e)
         return None
 
     def delete(self, key):
