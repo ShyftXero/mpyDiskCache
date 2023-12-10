@@ -79,8 +79,8 @@ class mpyDiskCache:
             if key not in self.ages:
                 self.ages.append(key)
             self._clean_up()
-        except OSError:
-            pass
+        except BaseException as e:
+            print(e)
 
     def get(self, key):
         try:
@@ -102,5 +102,5 @@ class mpyDiskCache:
             if key in self.ages:
                 self.ages.remove(key)
             self._save_ages()
-        except OSError:
-            pass
+        except BaseException as e:
+            print(e)
